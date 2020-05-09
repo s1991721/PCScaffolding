@@ -2,23 +2,27 @@
   <div class="login-container">
     <el-form
       :model="loginForm"
-      status-icon
       :rules="loginRules"
       ref="loginForm"
-      label-width="100px"
       class="login-form"
+      auto-complete="on"
+      label-position="left"
     >
       <div class="title-container">
         <h3 class="title">Login Form</h3>
       </div>
 
-      <el-form-item label="账号" prop="account">
+      <el-form-item prop="account">
+        <span class="svg-container">
+          <svg-icon icon-class="user" />
+        </span>
+
         <el-input
           ref="account"
           type="text"
           v-model="loginForm.account"
           placeholder="Account"
-          autocomplete="on"
+          auto-complete="on"
           name="account"
           tabindex="1"
         ></el-input>
@@ -80,11 +84,26 @@ export default {
 <style lang="scss" scoped>
 $bg: #2d3a4b;
 $light_gray: #fff;
+$dark_gray: #889aa4;
+$cursor: #fff;
 
 .login-container {
   background-color: $bg;
   min-height: 100%;
   width: 100%;
+
+  .el-input {//高度设置后才和svg左右显示
+    height: 47px;
+    width: 85%;
+
+  }
+
+  .el-form-item{
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    color: #454545;
+  }
 }
 
 .login-form {
@@ -96,6 +115,10 @@ $light_gray: #fff;
 
 .login-container {
   position: relative;
+  min-height: 100%;
+  width: 100%;
+  background-color: $bg;
+  overflow: hidden;
 
   .title {
     font-size: 26px;
@@ -104,5 +127,20 @@ $light_gray: #fff;
     text-align: center;
     font-weight: bold;
   }
+}
+
+.svg-container {
+  padding: 6px 5px 6px 15px;
+  color: $dark_gray;
+  vertical-align: middle;
+  width: 30px;
+  display: inline-block;
+}
+
+.el-form-item {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  color: #454545;
 }
 </style>

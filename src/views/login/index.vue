@@ -1,101 +1,85 @@
 <template>
   <div class="login-container">
     <el-form
-      :model="ruleForm"
+      :model="loginForm"
       status-icon
-      :rules="rules"
-      ref="ruleForm"
+      :rules="loginRules"
+      ref="loginForm"
       label-width="100px"
       class="login-form"
     >
-      <el-form-item label="密码" prop="pass">
-        <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+      <div class="title-container">
+        <h3 class="title">Login Form</h3>
+      </div>
+
+      <el-form-item label="账号" prop="account">
+        <el-input
+          ref="account"
+          type="text"
+          v-model="loginForm.account"
+          placeholder="Account"
+          autocomplete="on"
+          name="account"
+          tabindex="1"
+        ></el-input>
       </el-form-item>
-      <el-form-item label="确认密码" prop="checkPass">
-        <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
+      <el-form-item label="密码" prop="password">
+        <el-input
+          ref="password"
+          :type="passwordType"
+          v-model="loginForm.password"
+          placeholder="Password"
+          autocomplete="on"
+          name="password"
+          tabindex="2"
+          @keyup.enter.native="login"
+        ></el-input>
       </el-form-item>
-      <el-form-item label="年龄" prop="age">
-        <el-input v-model.number="ruleForm.age"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
-        <el-button @click="resetForm('ruleForm')">重置</el-button>
-      </el-form-item>
+
+      <el-button
+        :loading="loading"
+        type="primary"
+        style="width:100%;margin-bottom:30px;"
+        @click.native.prevent="submitForm('login')"
+      >Login</el-button>
+      <!-- @click.native.prevent 用来阻止默认行为 -->
     </el-form>
   </div>
 </template>
 
 <script>
 export default {
+  name: "Login", //组件名
   data() {
-    var checkAge = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error("年龄不能为空"));
-      }
-      setTimeout(() => {
-        if (!Number.isInteger(value)) {
-          callback(new Error("请输入数字值"));
-        } else {
-          if (value < 18) {
-            callback(new Error("必须年满18岁"));
-          } else {
-            callback();
-          }
-        }
-      }, 1000);
-    };
-    var validatePass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"));
-      } else {
-        if (this.ruleForm.checkPass !== "") {
-          this.$refs.ruleForm.validateField("checkPass");
-        }
-        callback();
-      }
-    };
-    var validatePass2 = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请再次输入密码"));
-      } else if (value !== this.ruleForm.pass) {
-        callback(new Error("两次输入密码不一致!"));
-      } else {
-        callback();
-      }
-    };
+    const validateAccount = (rule, value, callback) => {};
+    const validatePassword = (rule, value, callback) => {};
+
     return {
-      ruleForm: {
-        pass: "",
-        checkPass: "",
-        age: ""
+      loginForm: {
+        account: "Account",
+        password: "Password"
       },
-      rules: {
-        pass: [{ validator: validatePass, trigger: "blur" }],
-        checkPass: [{ validator: validatePass2, trigger: "blur" }],
-        age: [{ validator: checkAge, trigger: "blur" }]
-      }
+      loginRules: {
+        account: [
+          { required: true, trigger: "blur", validator: validateAccount }
+        ],
+        password: [
+          { required: true, trigger: "blur", validator: validatePassword }
+        ]
+      },
+      loading: false,
+      passwordType: "password"
     };
   },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    }
+    login() {}
   }
 };
 </script>
 
 <style lang="scss" scoped>
 $bg: #2d3a4b;
+$light_gray: #fff;
 
 .login-container {
   background-color: $bg;
@@ -105,8 +89,20 @@ $bg: #2d3a4b;
 
 .login-form {
   width: 520px;
-  padding: 160px 35px 0;  //手动设置垂直居中  方向：上右下左
+  padding: 160px 35px 0; //手动设置垂直居中  方向：上右下左
   margin: 0 auto; //横向居中 0代表上下
   position: relative;
+}
+
+.login-container {
+  position: relative;
+
+  .title {
+    font-size: 26px;
+    color: $light_gray;
+    margin: 0px auto 40px auto auto;
+    text-align: center;
+    font-weight: bold;
+  }
 }
 </style>

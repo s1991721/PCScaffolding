@@ -66,16 +66,30 @@
 </template>
 
 <script>
+import { validUsername } from "@/utils/validate";
+
 export default {
   name: "Login", //组件名
   data() {
-    const validateAccount = (rule, value, callback) => {};
-    const validatePassword = (rule, value, callback) => {};
+    const validateAccount = (rule, value, callback) => {
+      if (!validUsername(value)) {
+        callback(new Error("Please enter the correct user name"));
+      } else {
+        callback();
+      }
+    };
+    const validatePassword = (rule, value, callback) => {
+      if (value.length < 6) {
+        callback(new Error("The password can not be less than 6 digits"));
+      } else {
+        callback();
+      }
+    };
 
     return {
       loginForm: {
-        account: "Account",
-        password: "Password"
+        account: "",
+        password: ""
       },
       loginRules: {
         account: [
@@ -102,7 +116,13 @@ export default {
       });
     },
 
-    login() {}
+    login() {
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          //验证成功执行登录
+        }
+      });
+    }
   }
 };
 </script>
@@ -188,12 +208,11 @@ $cursor: #fff;
     margin-bottom: 10px;
     // &符号是scss和less里的语法，代表上一级选择器，实际编译成css就是span
     // :first-of-type 匹配的是该类型的第一个
-    span{
-      &:first-of-type{
+    span {
+      &:first-of-type {
         margin-right: 16px;
       }
     }
-
   }
 }
 </style>

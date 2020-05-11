@@ -27,7 +27,12 @@
           tabindex="1"
         ></el-input>
       </el-form-item>
-      <el-form-item label="密码" prop="password">
+
+      <el-form-item prop="password">
+        <span class="svg-container">
+          <svg-icon icon-class="password" />
+        </span>
+
         <el-input
           ref="password"
           :type="passwordType"
@@ -38,6 +43,10 @@
           tabindex="2"
           @keyup.enter.native="login"
         ></el-input>
+
+        <span class="show-pwd" @click="showPwd">
+          <svg-icon :icon-class="passwordType === 'password' ?'eye':'eye-open'" />
+        </span>
       </el-form-item>
 
       <el-button
@@ -47,6 +56,11 @@
         @click.native.prevent="submitForm('login')"
       >Login</el-button>
       <!-- @click.native.prevent 用来阻止默认行为 -->
+
+      <div class="tips">
+        <span>tips one</span>
+        <span>tips two</span>
+      </div>
     </el-form>
   </div>
 </template>
@@ -76,10 +90,46 @@ export default {
     };
   },
   methods: {
+    showPwd() {
+      if (this.passwordType === "password") {
+        this.passwordType = "";
+      } else {
+        this.passwordType = "password";
+      }
+      this.$nextTick(() => {
+        //DOM更新后执行的操作
+        this.$refs.password.focus();
+      });
+    },
+
     login() {}
   }
 };
 </script>
+
+// 设置一个全局的样式，否则对input不生效
+<style lang="scss">
+$light_gray: #fff;
+$cursor: #fff;
+
+.login-container {
+  .el-input {
+    display: inline-block;
+    height: 47px;
+    width: 85%;
+
+    input {
+      background: transparent;
+      border: 0px;
+      border-radius: 0px;
+      padding: 12px 5px 12px 15px;
+      height: 47px; //设置相同高度，否则显示偏上
+      color: $light_gray; //文字颜色
+      caret-color: $cursor; //光标颜色
+    }
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 $bg: #2d3a4b;
@@ -92,55 +142,58 @@ $cursor: #fff;
   min-height: 100%;
   width: 100%;
 
-  .el-input {//高度设置后才和svg左右显示
-    height: 47px;
-    width: 85%;
-
+  .title-container {
+    .title {
+      font-size: 26px;
+      color: $light_gray;
+      margin: 0px auto 40px auto;
+      text-align: center;
+      font-weight: bold;
+    }
   }
 
-  .el-form-item{
+  .login-form {
+    width: 520px;
+    max-width: 100%;
+    padding: 160px 35px 0; //手动设置垂直居中  方向：上右下左
+    margin: 0 auto; //横向居中 0代表上下
+  }
+
+  .el-form-item {
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     color: #454545;
   }
-}
 
-.login-form {
-  width: 520px;
-  padding: 160px 35px 0; //手动设置垂直居中  方向：上右下左
-  margin: 0 auto; //横向居中 0代表上下
-  position: relative;
-}
-
-.login-container {
-  position: relative;
-  min-height: 100%;
-  width: 100%;
-  background-color: $bg;
-  overflow: hidden;
-
-  .title {
-    font-size: 26px;
-    color: $light_gray;
-    margin: 0px auto 40px auto auto;
-    text-align: center;
-    font-weight: bold;
+  .svg-container {
+    padding: 6px 5px 6px 15px;
+    color: $dark_gray;
+    vertical-align: middle;
+    width: 30px;
   }
-}
 
-.svg-container {
-  padding: 6px 5px 6px 15px;
-  color: $dark_gray;
-  vertical-align: middle;
-  width: 30px;
-  display: inline-block;
-}
+  .show-pwd {
+    position: absolute;
+    right: 10px;
+    top: 7px;
+    font-size: 16px;
+    color: $dark_gray;
+    cursor: pointer; //鼠标悬停变食指
+  }
 
-.el-form-item {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  color: #454545;
+  .tips {
+    font-size: 14px;
+    color: #fff;
+    margin-bottom: 10px;
+    // &符号是scss和less里的语法，代表上一级选择器，实际编译成css就是span
+    // :first-of-type 匹配的是该类型的第一个
+    span{
+      &:first-of-type{
+        margin-right: 16px;
+      }
+    }
+
+  }
 }
 </style>
